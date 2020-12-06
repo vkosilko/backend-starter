@@ -9,6 +9,12 @@ import * as cors from '@koa/cors'
 import { runMongo } from '@/models/index'
 import * as Router from 'koa-router'
 
+const logger = require('koa-logger')              //not working with import
+const authRouter = require('./routes/authRoutes') //need correct syntax for 12-13 lines
+
+
+const APP_PORT = process.env.APP_PORT || 1337
+
 if (process.env.TESTING !== 'true') {
   runMongo()
 }
@@ -26,12 +32,13 @@ export async function main() {
   })
 
   // Run app
+  app.use(logger())
   app.use(cors({ origin: '*' }))
   app.use(bodyParser())
   app.use(router.routes())
   app.use(router.allowedMethods())
-  app.listen(1337)
-  console.log('Koa application is up and running on port 1337')
+  app.listen(APP_PORT)
+  console.log(`Koa application is up and running on port ${APP_PORT}`)
 }
 main()
 
